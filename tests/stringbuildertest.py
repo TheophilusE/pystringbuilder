@@ -53,5 +53,29 @@ class TestStringBuilder(unittest.TestCase):
         sb.clear()
         self.assertEqual(str(sb), "")
 
+    def test_iadd(self):
+        sb  = StringBuilder()
+        sb += "Hello"
+        sb += " World"
+        self.assertEqual(str(sb), "Hello World")
+
+    def test_add(self):
+        sb1 = StringBuilder()
+        sb1.append("Hello")
+        sb2 = sb1 + " World"
+        self.assertEqual(str(sb2), "Hello World")
+
+    def test_getitem(self):
+        sb = StringBuilder()
+        sb.append("Hello World")
+        self.assertEqual(sb[6], "W")       # Single character
+        self.assertEqual(sb[:5], "Hello")  # Slice
+
+    def test_iter(self):
+        sb = StringBuilder()
+        sb.append("Hello")
+        charList = [char for char in sb]
+        self.assertEqual(charList, ["H", "e", "l", "l", "o"])
+
 if __name__ == "__main__":
     unittest.main()
