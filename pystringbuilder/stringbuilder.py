@@ -282,6 +282,29 @@ class StringBuilder:
             iEnd = self.iLength
         return ''.join(self.szBuffer[iStart:iEnd])
 
+
+    @staticmethod
+    def _kmp_prefix(pattern: list) -> list:
+        """
+        Build the longest prefix-suffix (lps) table used by the KMP algorithm.
+        """
+        m        = len(pattern)
+        lps      = [0] * m
+        uiLength = 0
+        i = 1
+        while i < m:
+            if pattern[i] == pattern[uiLength]:
+                uiLength += 1
+                lps[i]    = uiLength
+                i        += 1
+            else:
+                if uiLength:
+                    uiLength = lps[uiLength - 1]
+                else:
+                    lps[i] = 0
+                    i     += 1
+        return lps
+
     def find(self, szSub: str, iStart: int = 0, iEnd: int = None) -> int:
         """
         Find the first occurrence of a substring within the builder.
@@ -291,8 +314,37 @@ class StringBuilder:
         :param iEnd: Ending index for the search; defaults to current length.
         :return: The index of the substring or -1 if not found.
         """
-        szFullStr = str(self)
-        return szFullStr.find(szSub, iStart, iEnd if iEnd is not None else self.iLength)
+        STRING_THRESHOLD = 1000
+
+        if self.iLength < STRING_THRESHOLD:
+            szFullStr = str(self)
+            return szFullStr.find(szSub, iStart, iEnd if iEnd is not None else self.iLength)
+
+        else:
+            if iEnd is None or iEnd > self.iLength:
+                iEnd = self.iLength
+
+            subList     = list(szSub)
+            uiSubLength = len(subList)
+
+            if uiSubLength == 0:
+                return iStart
+
+            lps = StringBuilder._kmp_prefix(subList)
+            i   = iStart
+            j   = 0
+            while i < iEnd:
+                if self.szBuffer[i] == subList[j]:
+                    i += 1
+                    j += 1
+                    if j == uiSubLength:
+                        return i - j
+                else:
+                    if j:
+                        j = lps[j - 1]
+                    else:
+                        i += 1
+        return -1
 
     def __str__(self) -> str:
         """
