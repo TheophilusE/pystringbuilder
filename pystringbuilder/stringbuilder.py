@@ -232,19 +232,3 @@ class StringBuilder:
         """
         for i in range(self.iLength):
             yield self.szBuffer[i]
-
-# Example usage:
-if __name__ == "__main__":
-    sb = StringBuilder(50)  # starting with a smaller capacity for demonstration
-    sb.append("Hello").append(", ")
-    sb.append_line("World!")
-    sb.insert(7, "beautiful ")
-    print("Current string:", str(sb))
-    sb.delete(7, 17)
-    print("After deletion:", str(sb))
-    sb.replace("World", "Universe")
-    print("After replacement:", str(sb))
-    sb.reverse()
-    print("Reversed:", str(sb))
-    print("Substring (2 to 7):", sb.substring(2, 7))
-    print("Find 'e':", sb.find("e"))
