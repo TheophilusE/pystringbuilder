@@ -61,11 +61,52 @@ class TestStringBuilder(unittest.TestCase):
         sb.reverse()
         self.assertEqual(str(sb), "nohtyP")
 
-    def test_trim(self):
+    def test_trim_no_whitespace(self):
         sb = StringBuilder()
-        sb.append("   Hello World   ")
+        sb.append("Hello, world!")
         sb.trim()
-        self.assertEqual(str(sb), "Hello World")
+        self.assertEqual(str(sb), "Hello, world!")
+
+    def test_trim_leading_whitespace(self):
+        sb = StringBuilder()
+        sb.append("   Hello")
+        sb.trim()
+        self.assertEqual(str(sb), "Hello")
+
+    def test_trim_trailing_whitespace(self):
+        sb = StringBuilder()
+        sb.append("Hello   ")
+        sb.trim()
+        self.assertEqual(str(sb), "Hello")
+
+    def test_trim_leading_and_trailing_whitespace(self):
+        sb = StringBuilder()
+        sb.append("   Hello   ")
+        sb.trim()
+        self.assertEqual(str(sb), "Hello")
+
+    def test_trim_all_whitespace(self):
+        sb = StringBuilder()
+        sb.append("     ")
+        sb.trim()
+        self.assertEqual(str(sb), "")
+
+    def test_trim_mixed_whitespace(self):
+        sb = StringBuilder()
+        sb.append("\t  Hello \n ")
+        sb.trim()
+        self.assertEqual(str(sb), "Hello")
+
+    def test_trim_large_string(self):
+        sb = StringBuilder()
+        sb.append(" " * 2000 + "Hello" + " " * 2000)
+        sb.trim()
+        self.assertEqual(str(sb), "Hello")
+
+    def test_trim_empty_buffer(self):
+        sb = StringBuilder()
+        sb.trim()
+        self.assertEqual(str(sb), "")
 
     def test_trim_start(self):
         sb = StringBuilder()

@@ -197,9 +197,33 @@ class StringBuilder:
         """
         Removes leading and trailing whitespace.
         """
-        szTrimmed = str(self).strip()
-        self.clear()
-        self.append(szTrimmed)
+        STRING_THRESHOLD = 1000
+
+        if self.iLength < STRING_THRESHOLD:
+            szTrimmed = str(self).strip()
+            self.clear()
+            self.append(szTrimmed)
+
+        else:
+            uiStart = 0
+            while uiStart < self.iLength and self.szBuffer[uiStart].isspace():
+                uiStart += 1
+
+            if uiStart == self.iLength:
+                # If all characters are whitespace, clear the builder.
+                self.iLength = 0
+                return self
+
+            uiEnd = self.iLength - 1
+            while uiEnd >= uiStart and self.szBuffer[uiEnd].isspace():
+                uiEnd -= 1
+
+            uiNewLength = uiEnd - uiStart + 1
+
+            # If necessary, shift the trimmed content to the beginning.
+            self.szBuffer[:uiNewLength] = self.szBuffer[uiStart : uiStart + uiNewLength]
+            self.iLength                = uiNewLength
+
         return self
 
     def trim_start(self) -> "StringBuilder":
