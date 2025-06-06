@@ -183,10 +183,68 @@ class TestStringBuilder(unittest.TestCase):
         sb.append("Hello World")
         self.assertEqual(sb.substring(6, 11), "World")
 
-    def test_find(self):
+    def test_find_exact_match(self):
         sb = StringBuilder()
-        sb.append("Hello World")
-        self.assertEqual(sb.find("World"), 6)
+        sb.append("Hello, this is a test string for find method.")
+        self.assertEqual(sb.find("test"), 17)
+
+    def test_find_partial_match(self):
+        sb = StringBuilder()
+        sb.append("Hello, this is a test string for find method.")
+        self.assertEqual(sb.find("is"), 9)  # First occurrence of "is".
+
+    def test_find_no_match(self):
+        sb = StringBuilder()
+        sb.append("Hello, this is a test string for find method.")
+        self.assertEqual(sb.find("notfound"), -1)
+
+    def test_find_empty_substring(self):
+        sb = StringBuilder()
+        sb.append("Hello, this is a test string for find method.")
+        self.assertEqual(sb.find(""), 0)
+
+    def test_find_single_character(self):
+        sb = StringBuilder()
+        sb.append("Hello, this is a test string for find method.")
+        self.assertEqual(sb.find("t"), 7)
+
+    def test_find_start_index(self):
+        sb = StringBuilder()
+        sb.append("Hello, this is a test string for find method.")
+        self.assertEqual(sb.find("is", 11), 12)  # Finds the second occurrence of "is"
+
+    def test_find_end_index(self):
+        sb = StringBuilder()
+        sb.append("Hello, this is a test string for find method.")
+        self.assertEqual(sb.find("string", 0, 20), -1)  # "string" is at index 22 but limit is 20.
+
+    def test_find_large_string_switching(self):
+        sb = StringBuilder()
+        sb.append("Hello, this is a test string for find method.")
+        szLargeText = "A" * 2000 + "pattern" + "B" * 2000
+        sb.clear()
+        sb.append(szLargeText)
+        self.assertEqual(sb.find("pattern"), 2000)
+
+    def test_find_large_string_no_match(self):
+        sb = StringBuilder()
+        sb.append("Hello, this is a test string for find method.")
+        szLargeText = "X" * 5000
+        sb.clear()
+        sb.append(szLargeText)
+        self.assertEqual(sb.find("Y"), -1)
+
+    def test_find_special_characters(self):
+        sb = StringBuilder()
+        sb.append("Hello, this is a test string for find method.")
+        sb.append("!@#$%^&*()_+")
+        self.assertEqual(sb.find("&*"), 51)  # Index where "&*" appears.
+
+    def test_find_unicode(self):
+        sb = StringBuilder()
+        sb.append("Hello, this is a test string for find method.")
+        sb.append("こんにちは世界")
+        self.assertEqual(sb.find("世界"), 50)  # Index where "世界" appears.
 
     def test_clear(self):
         sb = StringBuilder()
