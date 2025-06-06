@@ -60,8 +60,7 @@ class StringBuilder:
         :param szText: The string to append before the newline.
         :return: Self, to allow chaining.
         """
-        self.append(szText)
-        self.append("\n")
+        self.append(szText).append('\n')
         return self
 
     def insert(self, iIndex: int, szText: str) -> "StringBuilder":
@@ -74,7 +73,7 @@ class StringBuilder:
         :raises IndexError: If the index is out of bounds.
         """
         if iIndex < 0 or iIndex > self.iLength:
-            raise IndexError("Index out of range")
+            raise IndexError("Index out of range.")
 
         szStr = str(szText)
         iSize = len(szStr)
@@ -121,13 +120,57 @@ class StringBuilder:
         :param szNew: The replacement substring.
         :return: Self, with replaced content.
         """
-        # Convert current content, do the replace, and rebuild.
-        szReplaced     = str(self).replace(szOld, szNew)
-        # Optionally, adjust capacity if needed.
-        self.iCapacity = max(self.iCapacity, len(szReplaced))
-        self.szBuffer  = [''] * self.iCapacity
-        self.iLength   = 0
-        self.append(szReplaced)
+        # Define thresholds based on empirical testing.
+        STRING_THRESHOLD  = 1000  # characters
+        PATTERN_THRESHOLD = 5     # characters
+
+        # Calculate total size.
+        uiTotalSize = len(self.szBuffer) + len(szOld) + len(szNew)
+
+        # Choose method based on size and pattern length.
+        if uiTotalSize < STRING_THRESHOLD and len(szOld) < PATTERN_THRESHOLD:
+            # Convert current content, do the replace, and rebuild.
+            szReplaced     = str(self).replace(szOld, szNew)
+            # Optionally, adjust capacity if needed.
+            self.iCapacity = max(self.iCapacity, len(szReplaced))
+            self.szBuffer  = [''] * self.iCapacity
+            self.iLength   = 0
+            self.append(szReplaced)
+
+        else:
+            if szOld == "":
+                return self
+
+            oldChars = list(szOld)
+            newChars = list(szNew)
+            uiOldLen = len(oldChars)
+            result   = []  # Build the result as a list of characters.
+            i        = 0
+
+            while i < self.iLength:
+                match = True
+                # Check for a match with szOld starting at position i.
+                if i <= self.iLength - uiOldLen:
+                    for j in range(uiOldLen):
+                        if self.szBuffer[i + j] != oldChars[j]:
+                            match = False
+                            break
+                    if match:
+                        result.extend(newChars)
+                        i += uiOldLen
+                        continue  # Skip the replaced segment.
+                # If no match, simply append the current character.
+                result.append(self.szBuffer[i])
+                i += 1
+
+            uiNewLength = len(result)
+            if uiNewLength > self.iCapacity:
+                self.iCapacity = uiNewLength
+                self.szBuffer  = [''] * self.iCapacity
+
+            # Copy the result back into the buffer.
+            self.szBuffer[:uiNewLength] = result
+            self.iLength                = uiNewLength
         return self
 
     def clear(self) -> None:

@@ -25,11 +25,35 @@ class TestStringBuilder(unittest.TestCase):
         sb.delete(6, 16)
         self.assertEqual(str(sb), "Hello World")
 
-    def test_replace(self):
+    def test_replace_simple(self):
         sb = StringBuilder()
-        sb.append("Hello World")
-        sb.replace("World", "Universe")
-        self.assertEqual(str(sb), "Hello Universe")
+        sb.append("Hello, world! Hello!")
+        sb.replace("Hello", "Hi")
+        self.assertEqual(str(sb), "Hi, world! Hi!")
+
+    def test_replace_partial(self):
+        sb = StringBuilder()
+        sb.append("Hello, world! Hello!")
+        sb.replace("lo", "XX")
+        self.assertEqual(str(sb), "HelXX, world! HelXX!")
+
+    def test_replace_no_match(self):
+        sb = StringBuilder()
+        sb.append("Hello, world! Hello!")
+        sb.replace("Goodbye", "Hi")
+        self.assertEqual(str(sb), "Hello, world! Hello!")
+
+    def test_replace_empty_old(self):
+        sb = StringBuilder()
+        sb.append("Hello, world! Hello!")
+        sb.replace("", "Hi")
+        self.assertEqual(str(sb), "Hello, world! Hello!")
+
+    def test_replace_large_string(self):
+        sb = StringBuilder()
+        sb.append("Hello, world! Hello!" * 500)
+        sb.replace("Hello", "Greetings")
+        self.assertEqual(str(sb), "Greetings, world! Greetings!" * 500)
 
     def test_reverse(self):
         sb = StringBuilder()
