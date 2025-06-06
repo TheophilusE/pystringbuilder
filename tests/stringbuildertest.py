@@ -108,17 +108,75 @@ class TestStringBuilder(unittest.TestCase):
         sb.trim()
         self.assertEqual(str(sb), "")
 
-    def test_trim_start(self):
+    def test_trim_start_no_whitespace(self):
         sb = StringBuilder()
-        sb.append("   Hello World   ")
+        sb.append("Hello, world!")
         sb.trim_start()
-        self.assertEqual(str(sb), "Hello World   ")
+        self.assertEqual(str(sb), "Hello, world!")
 
-    def test_trim_end(self):
+    def test_trim_start_leading_whitespace(self):
         sb = StringBuilder()
-        sb.append("   Hello World   ")
+        sb.append("   Hello")
+        sb.trim_start()
+        self.assertEqual(str(sb), "Hello")
+
+    def test_trim_start_mixed_whitespace(self):
+        sb = StringBuilder()
+        sb.append("\t  Hello")
+        sb.trim_start()
+        self.assertEqual(str(sb), "Hello")
+
+    def test_trim_start_large_string(self):
+        sb = StringBuilder()
+        sb.append(" " * 2000 + "Hello")
+        sb.trim_start()
+        self.assertEqual(str(sb), "Hello")
+
+    def test_trim_start_empty_buffer(self):
+        sb = StringBuilder()
+        sb.trim_start()
+        self.assertEqual(str(sb), "")
+
+    def test_trim_start_all_whitespace(self):
+        sb = StringBuilder()
+        sb.append("     ")
+        sb.trim_start()
+        self.assertEqual(str(sb), "")
+
+    def test_trim_end_no_whitespace(self):
+        sb = StringBuilder()
+        sb.append("Hello, world!")
         sb.trim_end()
-        self.assertEqual(str(sb), "   Hello World")
+        self.assertEqual(str(sb), "Hello, world!")
+
+    def test_trim_end_trailing_whitespace(self):
+        sb = StringBuilder()
+        sb.append("Hello   ")
+        sb.trim_end()
+        self.assertEqual(str(sb), "Hello")
+
+    def test_trim_end_mixed_whitespace(self):
+        sb = StringBuilder()
+        sb.append("Hello \t  \n")
+        sb.trim_end()
+        self.assertEqual(str(sb), "Hello")
+
+    def test_trim_end_large_string(self):
+        sb = StringBuilder()
+        sb.append("Hello" + " " * 2000)
+        sb.trim_end()
+        self.assertEqual(str(sb), "Hello")
+
+    def test_trim_end_empty_buffer(self):
+        sb = StringBuilder()
+        sb.trim_end()
+        self.assertEqual(str(sb), "")
+
+    def test_trim_end_all_whitespace(self):
+        sb = StringBuilder()
+        sb.append("     ")
+        sb.trim_end()
+        self.assertEqual(str(sb), "")
 
     def test_substring(self):
         sb = StringBuilder()

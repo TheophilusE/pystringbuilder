@@ -230,18 +230,44 @@ class StringBuilder:
         """
         Removes leading whitespace.
         """
-        szTrimmed = str(self).lstrip()
-        self.clear()
-        self.append(szTrimmed)
+        STRING_THRESHOLD = 1000
+
+        if self.iLength < STRING_THRESHOLD:
+            szTrimmed = str(self).lstrip()
+            self.clear()
+            self.append(szTrimmed)
+
+        else:
+            uiStart = 0
+            while uiStart < self.iLength and self.szBuffer[uiStart].isspace():
+                uiStart += 1
+
+            if uiStart > 0:
+                uiNewLength                 = self.iLength - uiStart
+                self.szBuffer[:uiNewLength] = self.szBuffer[uiStart:self.iLength]
+                self.iLength                = uiNewLength
+
         return self
 
     def trim_end(self) -> "StringBuilder":
         """
         Removes trailing whitespace.
         """
-        szTrimmed = str(self).rstrip()
-        self.clear()
-        self.append(szTrimmed)
+        STRING_THRESHOLD = 1000
+
+        if self.iLength < STRING_THRESHOLD:
+            szTrimmed = str(self).rstrip()
+            self.clear()
+            self.append(szTrimmed)
+
+        else:
+            if self.iLength == 0:
+                return self
+            uiEnd = self.iLength - 1
+            while uiEnd >= 0 and self.szBuffer[uiEnd].isspace():
+                uiEnd -= 1
+            self.iLength = uiEnd + 1
+
         return self
 
     def substring(self, iStart: int, iEnd: int = None) -> str:
