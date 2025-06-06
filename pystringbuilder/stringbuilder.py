@@ -150,6 +150,33 @@ class StringBuilder:
             iRight                                     -= 1
         return self
 
+    def trim(self) -> "StringBuilder":
+        """
+        Removes leading and trailing whitespace.
+        """
+        szTrimmed = str(self).strip()
+        self.clear()
+        self.append(szTrimmed)
+        return self
+
+    def trim_start(self) -> "StringBuilder":
+        """
+        Removes leading whitespace.
+        """
+        szTrimmed = str(self).lstrip()
+        self.clear()
+        self.append(szTrimmed)
+        return self
+
+    def trim_end(self) -> "StringBuilder":
+        """
+        Removes trailing whitespace.
+        """
+        szTrimmed = str(self).rstrip()
+        self.clear()
+        self.append(szTrimmed)
+        return self
+
     def substring(self, iStart: int, iEnd: int = None) -> str:
         """
         Get a substring of the builder's content.

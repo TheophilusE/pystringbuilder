@@ -37,6 +37,24 @@ class TestStringBuilder(unittest.TestCase):
         sb.reverse()
         self.assertEqual(str(sb), "nohtyP")
 
+    def test_trim(self):
+        sb = StringBuilder()
+        sb.append("   Hello World   ")
+        sb.trim()
+        self.assertEqual(str(sb), "Hello World")
+
+    def test_trim_start(self):
+        sb = StringBuilder()
+        sb.append("   Hello World   ")
+        sb.trim_start()
+        self.assertEqual(str(sb), "Hello World   ")
+
+    def test_trim_end(self):
+        sb = StringBuilder()
+        sb.append("   Hello World   ")
+        sb.trim_end()
+        self.assertEqual(str(sb), "   Hello World")
+
     def test_substring(self):
         sb = StringBuilder()
         sb.append("Hello World")
